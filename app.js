@@ -6,8 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var inventoryRouter = require('./routes/inventory');
-var adminRouter = require('./routes/admin');
+
 var app = express();
 
 // view engine setup
@@ -24,8 +23,7 @@ var cors = require('cors')
 app.use(cors()) // Use this after the variable declaration
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/inventory', inventoryRouter);
-app.use('/admin', adminRouter);
+
 
 
 // catch 404 and forward to error handler
