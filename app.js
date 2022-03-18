@@ -22,6 +22,9 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 
 if(process.env.PORT){
   app.use(express.static(path.join(__dirname, "client/build")));
