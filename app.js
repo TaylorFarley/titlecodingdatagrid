@@ -6,42 +6,45 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+var inventoryRouter = require('./routes/inventory');
+var adminRouter = require('./routes/admin');
 var app = express();
+
+// view engine setup
+
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'client/build')));
 
+var cors = require('cors')
 
+app.use(cors()) // Use this after the variable declaration
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/inventory', inventoryRouter);
+app.use('/admin', adminRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-if(process.env.PORT){
-  app.use(express.static(path.join(__dirname, "client/build")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname + "/client/build/index.html"));
-  });
-  
-  
-  app.use((req, res, next) => {
-    next(createError(404));
-  });
+  // render the error page
+  res.status(err.status || 500);
+  res.json({ error: err })
+});
 
-  app.use(function (err, req, res, next) {
-    console.error(err.message);
-    if (!err.statusCode) err.statusCode = 500;
-    res.status(err.statusCode).send(err.message);
-  });
-  }
-  
 module.exports = app;
